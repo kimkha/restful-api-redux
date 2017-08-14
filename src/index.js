@@ -1,5 +1,5 @@
 // Export modules
-import { API_ACTION_TYPE, API_REDUX_KEY } from './constants'
+import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY } from './constants'
 import apiMiddleware from './middleware'
 import { apiReducer, initialState } from './reducer'
 
@@ -33,3 +33,5 @@ export const apiLoginBuilder = (url, options = {}, tokenConverter = tk => tk) =>
  * @return current state, format: { isLoading, response, error }
  */
 export const convertApiState = (state, key) => (state && state[API_REDUX_KEY] && state[API_REDUX_KEY][key]) || initialState;
+
+export const isLoginState = (state) => (state && state[API_REDUX_KEY] && state[API_REDUX_KEY][API_AUTHEN_KEY]);

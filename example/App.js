@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { demoApi as demoApiAction, userApi as userApiAction, loginApi as loginApiAction } from './actions';
-import { convertApiState } from '../src';
+import { convertApiState, isLoginState } from '../src';
 
 class App extends PureComponent {
   componentWillMount() {
@@ -19,12 +19,12 @@ class App extends PureComponent {
   };
 
   render() {
-    const { data } = this.props;
+    const { data, isLogin } = this.props;
 
     return (
       <div>
         {JSON.stringify(data)} <br/>
-        <button onClick={this.handleLogin}>Login</button>
+        {!isLogin && <button onClick={this.handleLogin}>Login</button>}
         <button onClick={this.handleApi}>Recall</button>
       </div>
     );
@@ -41,6 +41,7 @@ function mapStateToProps(state, props) {
     data: res.response,
     loading: res.isLoading,
     error: res.error,
+    isLogin: isLoginState(state),
   };
 }
 

@@ -40,10 +40,10 @@ export const apiReducer = {
       };
       if (obj.error && obj.error.status === 401 && !state[API_AUTHEN_KEY]) {
         // Authentication Error
-        result[API_AUTHEN_KEY] = true;
+        result[API_AUTHEN_KEY] = false;
       } else if (!obj.error && action.isLogin) {
         // Reset authen
-        result[API_AUTHEN_KEY] = false;
+        result[API_AUTHEN_KEY] = true;
       }
       return Object.assign({}, state, result);
     }
