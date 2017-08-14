@@ -1,4 +1,5 @@
 import HttpError from './HttpError';
+import { getToken } from './token';
 
 if (typeof GLOBAL !== 'undefined') {
   // For debugging network requests on React-native
@@ -20,14 +21,14 @@ export const fetchJson = (url, options = {}) => {
   if (options.user && options.user.authenticated && options.user.token) {
     requestHeaders.set('Authorization', options.user.token);
   } else {
-    // let token = storage.load('lbtoken');
-    // if (token && token.id) {
-    //     if (url.indexOf('?') >= 0) {
-    //         url = url + '&access_token=' + token.id;
-    //     } else {
-    //         url = url + '?access_token=' + token.id;
-    //     }
-    // }
+    let token = getToken();
+    if (token && token.id) {
+        if (url.indexOf('?') >= 0) {
+            url = url + '&access_token=' + token.id;
+        } else {
+            url = url + '?access_token=' + token.id;
+        }
+    }
     // // Cookie mode ONLY
     // options.credentials = 'include';
   }

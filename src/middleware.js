@@ -1,6 +1,7 @@
 import { API_ACTION_TYPE } from './constants';
 import { fetchJson } from './internals/fetch';
 import { toTypes } from './internals/types';
+import { saveToken } from './internals/token';
 
 export default ({ dispatch }) => next => action => {
   const apiAction = action[ API_ACTION_TYPE ];
@@ -17,23 +18,25 @@ export default ({ dispatch }) => next => action => {
     key: apiAction.key,
   });
 
-  return new Promise((resolve, reject) => {
-    fetchJson(apiAction.endpoint, apiAction.fetchOptions).then(({ json }) => {
-      dispatch({
-        type: apiTypes.SUCCESS,
-        payload: json,
-        key: apiAction.key,
-      });
+  return fetchJson(apiAction.endpoint, apiAction.fetchOptions).then(({ json }) => {
+    if (apiAction.isLogin) {
+      saveToken(apiAction.tokenConverter(json));
+    }
 
-      resolve(json);
-    }).catch(error => {
-      dispatch({
-        type: apiTypes.FAILURE,
-        payload: error,
-        key: apiAction.key,
-      });
+    dispatch({
+      type: apiTypes.SUCCESS,
+      payload: json,
+      key: apiAction.key,
+      isLogin: apiAction.isLogin,
+    });
 
-      reject(error);
+    return json;
+  }).catch(error => {
+    dispatch({
+      type: apiTypes.FAILURE,
+      payload: error,
+      key: apiAction.key,
+      isLogin: apiAction.isLogin,
     });
   });
 }

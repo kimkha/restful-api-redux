@@ -1,4 +1,4 @@
-import { API_REDUX_KEY } from './constants';
+import { API_REDUX_KEY, API_AUTHEN_KEY } from './constants';
 import { toTypes, isApiType } from './internals/types';
 
 export const initialState = {
@@ -34,9 +34,18 @@ export const apiReducer = {
   [API_REDUX_KEY]: (state = {}, action) => {
     if (isApiType(action.type)) {
       // Only proceed API
-      return Object.assign({}, state, {
-        [action.key]: objectReducer(state[ action.key ], action),
-      });
+      const obj = objectReducer(state[ action.key ], action);
+      const result = {
+        [action.key]: obj,
+      };
+      if (obj.error && obj.error.status === 401 && !state[API_AUTHEN_KEY]) {
+        // Authentication Error
+        result[API_AUTHEN_KEY] = true;
+      } else if (!obj.error && action.isLogin) {
+        // Reset authen
+        result[API_AUTHEN_KEY] = false;
+      }
+      return Object.assign({}, state, result);
     }
     return state;
   }

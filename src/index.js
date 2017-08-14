@@ -16,6 +16,16 @@ export const apiActionBuilder = (key, url, options = {}) => ({
   },
 });
 
+export const apiLoginBuilder = (url, options = {}, tokenConverter = tk => tk) => ({
+  [API_ACTION_TYPE]: {
+    key: 'login',
+    endpoint: url,
+    fetchOptions: options,
+    isLogin: true,
+    tokenConverter,
+  },
+});
+
 /**
  * Get state of an API
  * @param state
