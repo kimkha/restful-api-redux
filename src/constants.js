@@ -2,3 +2,4 @@
 export const API_ACTION_TYPE = '@@API_ACTION_TYPE';
 export const API_REDUX_KEY = 'api_redux';
 export const API_AUTHEN_KEY = '_authen';
+export const API_STORAGE_KEY = 'api_storage';

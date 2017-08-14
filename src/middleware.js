@@ -3,14 +3,7 @@ import { fetchJson } from './internals/fetch';
 import { toTypes } from './internals/types';
 import { saveToken } from './internals/token';
 
-export default ({ dispatch }) => next => action => {
-  const apiAction = action[ API_ACTION_TYPE ];
-
-  // Ignore non-api actions.
-  if (typeof apiAction !== 'object') {
-    return next(action);
-  }
-
+const asyncRequest = async (apiAction, dispatch) => {
   const apiTypes = toTypes(apiAction.key);
 
   dispatch({
@@ -18,9 +11,11 @@ export default ({ dispatch }) => next => action => {
     key: apiAction.key,
   });
 
-  return fetchJson(apiAction.endpoint, apiAction.fetchOptions).then(({ json }) => {
+  try {
+    const { json } = await fetchJson(apiAction.endpoint, apiAction.fetchOptions);
+
     if (apiAction.isLogin) {
-      saveToken(apiAction.tokenConverter(json));
+      await saveToken(apiAction.tokenConverter(json));
     }
 
     dispatch({
@@ -31,12 +26,25 @@ export default ({ dispatch }) => next => action => {
     });
 
     return json;
-  }).catch(error => {
+  } catch (error) {
+    // console.log(error);
+
     dispatch({
       type: apiTypes.FAILURE,
       payload: error,
       key: apiAction.key,
       isLogin: apiAction.isLogin,
     });
-  });
+  }
+};
+
+export default ({ dispatch }) => next => action => {
+  const apiAction = action[ API_ACTION_TYPE ];
+
+  // Ignore non-API actions.
+  if (typeof apiAction !== 'object') {
+    return next(action);
+  }
+
+  return asyncRequest(apiAction, dispatch);
 }

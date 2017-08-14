@@ -7,7 +7,7 @@ if (typeof GLOBAL !== 'undefined') {
   GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest;
 }
 
-export const fetchJson = (url, options = {}) => {
+export const fetchJson = async (url, options = {}) => {
   // if (url && !/^https?:\/\//.test(url)) {
   //     url = Config.apiUrl + url;
   // }
@@ -21,7 +21,7 @@ export const fetchJson = (url, options = {}) => {
   if (options.user && options.user.authenticated && options.user.token) {
     requestHeaders.set('Authorization', options.user.token);
   } else {
-    let token = getToken();
+    let token = await getToken();
     if (token && token.id) {
         if (url.indexOf('?') >= 0) {
             url = url + '&access_token=' + token.id;
@@ -33,7 +33,7 @@ export const fetchJson = (url, options = {}) => {
     // options.credentials = 'include';
   }
 
-  return fetch(url, { ...options, headers: requestHeaders })
+  return await fetch(url, { ...options, headers: requestHeaders })
     .then(response => response.text().then(text => ({
       status: response.status,
       statusText: response.statusText,
