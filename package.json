@@ -4,7 +4,7 @@
   "description": "RESTful API Request helper with Redux",
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --hot --inline --config ./webpack.config.js",
-    "build": "env NODE_ENV=production ./node_modules/.bin/babel ./src -d lib --ignore '*.spec.js'"
+    "build": "env NODE_ENV=buildOnly ./node_modules/.bin/babel ./src -d lib --ignore '*.spec.js'"
   },
   "main": "lib/index.js",
   "files": [

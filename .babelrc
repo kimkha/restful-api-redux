@@ -1,9 +1,22 @@
 {
-  "presets": ["es2015", "react", "stage-1"],
-  "plugins": ["transform-object-rest-spread", "add-module-exports",
-    ["transform-runtime", {
-      "polyfill": false,
-      "regenerator": true
-    }]
-  ]
+  "env": {
+    "buildOnly": {
+      "presets": [
+        "es2015",
+        "react",
+        "stage-1"
+      ],
+      "plugins": [
+        "transform-object-rest-spread",
+        "add-module-exports",
+        [
+          "transform-runtime",
+          {
+            "polyfill": false,
+            "regenerator": true
+          }
+        ]
+      ]
+    }
+  }
 }
