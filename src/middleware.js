@@ -9,6 +9,8 @@ const asyncRequest = async (apiAction, dispatch) => {
   dispatch({
     type: apiTypes.LOADING,
     key: apiAction.key,
+    isLogin: apiAction.isLogin,
+    isRest: apiAction.isRest,
   });
 
   try {
@@ -23,6 +25,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       payload: json,
       key: apiAction.key,
       isLogin: apiAction.isLogin,
+      isRest: apiAction.isRest,
     });
 
     return json;
@@ -34,6 +37,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       payload: error,
       key: apiAction.key,
       isLogin: apiAction.isLogin,
+      isRest: apiAction.isRest,
     });
   }
 };

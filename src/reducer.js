@@ -7,7 +7,44 @@ export const initialState = {
   response: null
 };
 
-const objectReducer = (state = initialState, { type, key, payload }) => {
+export const initialRestState = {
+  data: {},
+  rawData: [],
+  last: {
+    item: null,
+  },
+  list: {
+    ids: [],
+  }
+};
+
+const restReducer = (state = initialRestState, payload) => {
+  // TODO Parse reducer
+  if (payload) {
+    if (Array.isArray(payload)) {
+      // Response is an array of items
+      state.rawData = payload;
+      state.list.ids = [];// FIXME Should append the new list, instead reset list ids
+      payload.forEach(item => {
+        const id = item['id'] || item['_id'];
+        if (id) {
+          state.data[id] = item;
+          state.list.ids.push(id);
+        }
+      });
+    } else {
+      // Response is an item
+      const id = payload['id'] || payload['_id'];
+      if (id) {
+        state.data[id] = payload;
+      }
+      state.last.item = payload;
+    }
+  }
+  return state;
+};
+
+const objectReducer = (state = initialState, { type, key, payload, isRest }) => {
   const apiTypes = toTypes(key);
   switch (type) {
     case apiTypes.LOADING:
@@ -15,6 +52,9 @@ const objectReducer = (state = initialState, { type, key, payload }) => {
         isLoading: true
       });
     case apiTypes.SUCCESS:
+      if (isRest) {
+        payload = restReducer(state.response, payload);
+      }
       return Object.assign({}, state, {
         error: null,
         isLoading: false,
