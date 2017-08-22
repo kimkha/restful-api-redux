@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { demoApi as demoApiAction, userApi as userApiAction, loginApi as loginApiAction } from './actions';
-import { convertApiState, isLoginState } from '../src';
+import { demoApi as demoApiAction, queryClient as queryClientAction, userApi as userApiAction, loginApi as loginApiAction } from './actions';
+import { convertApiState, isLoginState, convertRestListState } from '../src';
 
 class App extends PureComponent {
   componentWillMount() {
@@ -18,14 +18,20 @@ class App extends PureComponent {
     this.props.userApi();
   };
 
+  handleClients = () => {
+    this.props.queryClient();
+  };
+
   render() {
-    const { data, isLogin } = this.props;
+    const { data, clients, isLogin } = this.props;
 
     return (
       <div>
         {JSON.stringify(data)} <br/>
+        {JSON.stringify(clients)} <br />
         {!isLogin && <button onClick={this.handleLogin}>Login</button>}
         <button onClick={this.handleApi}>Recall</button>
+        <button onClick={this.handleClients}>Fetch clients</button>
       </div>
     );
   }
@@ -37,11 +43,13 @@ App.defaultProps = {};
 
 function mapStateToProps(state, props) {
   const res = convertApiState(state, 'users');
+  const clients = convertRestListState(state, 'clients');
   return {
     data: res.response,
     loading: res.isLoading,
     error: res.error,
     isLogin: isLoginState(state),
+    clients,
   };
 }
 
@@ -50,6 +58,7 @@ const enhance = compose(
     mapStateToProps,
     {
       demoApi: demoApiAction,
+      queryClient: queryClientAction,
       userApi: userApiAction,
       loginApi: loginApiAction,
     },

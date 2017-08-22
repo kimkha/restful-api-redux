@@ -18,7 +18,8 @@ export const initialRestState = {
   }
 };
 
-const restReducer = (state = initialRestState, payload) => {
+const restReducer = (state, payload) => {
+  state = state || initialRestState;
   // TODO Parse reducer
   if (payload) {
     if (Array.isArray(payload)) {

@@ -30,7 +30,7 @@ const asyncRequest = async (apiAction, dispatch) => {
 
     return json;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
 
     dispatch({
       type: apiTypes.FAILURE,
