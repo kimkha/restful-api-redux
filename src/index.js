@@ -65,3 +65,12 @@ export const convertRestItemState = (state, key) => {
   }
   return null;
 };
+
+export const convertItemState = (state, key, id) => {
+  const apiResult = convertApiState(state, key);
+  if (apiResult.response) {
+    const data = apiResult.response.data;
+    return data && data[id];
+  }
+  return null;
+};
