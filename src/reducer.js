@@ -1,5 +1,5 @@
-import { API_REDUX_KEY, API_AUTHEN_KEY } from './constants';
-import { toTypes, isApiType } from './internals/types';
+import { API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY } from './constants';
+import { toTypes, isApiType, revertType } from './internals/types';
 
 export const initialState = {
   error: null,
@@ -89,5 +89,15 @@ export const apiReducer = {
       return Object.assign({}, state, result);
     }
     return state;
-  }
+  },
+  [API_REDUX_TRACK_KEY]: (state = {}, action) => {
+    if (isApiType(action.type) && action.trackingId) {
+      // Only proceed API
+      const status = revertType(action.type);
+      return Object.assign({}, state, {
+        [action.trackingId]: status,
+      });
+    }
+    return state;
+  },
 };

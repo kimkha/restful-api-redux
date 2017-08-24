@@ -11,6 +11,7 @@ const asyncRequest = async (apiAction, dispatch) => {
     key: apiAction.key,
     isLogin: apiAction.isLogin,
     isRest: apiAction.isRest,
+    trackingId: apiAction.trackingId,
   });
 
   try {
@@ -26,6 +27,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       key: apiAction.key,
       isLogin: apiAction.isLogin,
       isRest: apiAction.isRest,
+      trackingId: apiAction.trackingId,
     });
 
     return json;
@@ -38,6 +40,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       key: apiAction.key,
       isLogin: apiAction.isLogin,
       isRest: apiAction.isRest,
+      trackingId: apiAction.trackingId,
     });
   }
 };

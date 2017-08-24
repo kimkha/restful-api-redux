@@ -1,5 +1,5 @@
 // Export modules
-import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY } from './constants'
+import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY } from './constants'
 import apiMiddleware from './middleware'
 import { apiReducer, initialState } from './reducer'
 
@@ -8,31 +8,34 @@ export { apiMiddleware }
 export { apiReducer }
 
 // Main functions
-export const apiActionBuilder = (key, url, options = {}) => ({
+export const apiActionBuilder = (key, url, trackingId, options = {}) => ({
   [API_ACTION_TYPE]: {
     key,
     endpoint: url,
     fetchOptions: options,
+    trackingId,
   },
 });
 
 // TODO Call RESTful API
-export const apiRestBuilder = (key, url, options = {}) => ({
+export const apiRestBuilder = (key, url, trackingId, options = {}) => ({
   [API_ACTION_TYPE]: {
     key,
     endpoint: url,
     fetchOptions: options,
     isRest: true,
+    trackingId,
   },
 });
 
-export const apiLoginBuilder = (url, options = {}, tokenConverter = tk => tk) => ({
+export const apiLoginBuilder = (url, trackingId, options = {}, tokenConverter = tk => tk) => ({
   [API_ACTION_TYPE]: {
     key: 'login',
     endpoint: url,
     fetchOptions: options,
     isLogin: true,
     tokenConverter,
+    trackingId,
   },
 });
 
@@ -58,15 +61,7 @@ export const convertRestListState = (state, key) => {
   return [];
 };
 
-export const convertRestItemState = (state, key) => {
-  const apiResult = convertApiState(state, key);
-  if (apiResult.response && apiResult.response.last) {
-    return apiResult.response.last.item;
-  }
-  return null;
-};
-
-export const convertItemState = (state, key, id) => {
+export const convertRestItemState = (state, key, id) => {
   const apiResult = convertApiState(state, key);
   if (apiResult.response) {
     const data = apiResult.response.data;
@@ -74,3 +69,5 @@ export const convertItemState = (state, key, id) => {
   }
   return null;
 };
+
+export const convertApiStatus = (state, trackingId) => (state && state[API_REDUX_TRACK_KEY] && state[API_REDUX_TRACK_KEY][trackingId]) || '';

@@ -7,4 +7,6 @@ export const toTypes = (key) =>
     (o, t) => Object.assign(o, { [t]: `${API_ACTION_TYPE}/${key ? key.toUpperCase() : ''}_${t}` }),
     {});
 
+export const revertType = (type) => isApiType(type) && baseTypes.find(t => type.endsWith(t));
+
 export const isApiType = (type) => type.indexOf(`${API_ACTION_TYPE}/`) === 0;
