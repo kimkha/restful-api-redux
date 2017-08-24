@@ -98,6 +98,12 @@ export const apiReducer = {
         [action.trackingId]: status,
       });
     }
+    if (action.type === `${API_REDUX_TRACK_KEY}_RESET` && action.trackingId) {
+      // Reset trackingId
+      return Object.assign({}, state, {
+        [action.trackingId]: '',
+      });
+    }
     return state;
   },
 };

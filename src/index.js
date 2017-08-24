@@ -39,6 +39,11 @@ export const apiLoginBuilder = (url, trackingId, options = {}, tokenConverter = 
   },
 });
 
+export const apiResetTracking = (trackingId) => ({
+  type: `${API_REDUX_TRACK_KEY}_RESET`,
+  trackingId,
+});
+
 /**
  * Get state of an API
  * @param state
