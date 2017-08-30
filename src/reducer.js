@@ -9,7 +9,6 @@ export const initialState = {
 
 export const initialRestState = {
   data: {},
-  rawData: [],
   last: {
     item: null,
   },
@@ -22,24 +21,35 @@ const restReducer = (state, payload) => {
   state = state || initialRestState;
   // TODO Parse reducer
   if (payload) {
+    // Copy data before merge
+    const data = Object.assign({}, state.data);
+
     if (Array.isArray(payload)) {
       // Response is an array of items
-      state.rawData = payload;
-      state.list.ids = [];// FIXME Should append the new list, instead reset list ids
+      const list = {
+        ids: [],
+      };// FIXME Should append the new list, instead reset list ids
+
       payload.forEach(item => {
         const id = item['id'] || item['_id'];
         if (id) {
-          state.data[id] = item;
-          state.list.ids.push(id);
+          data[id] = item;
+          list.ids.push(id);
         }
       });
+
+      return Object.assign({}, state, { list, data });
     } else {
       // Response is an item
       const id = payload['id'] || payload['_id'];
       if (id) {
-        state.data[id] = payload;
+        data[id] = payload;
       }
-      state.last.item = payload;
+      const last = {
+        item: payload,
+      };
+
+      return Object.assign({}, state, { last, data });
     }
   }
   return state;
