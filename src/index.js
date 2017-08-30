@@ -6,6 +6,7 @@ import { apiReducer, initialState } from './reducer'
 export { API_ACTION_TYPE, API_REDUX_KEY }
 export { apiMiddleware }
 export { apiReducer }
+export { queryParameters } from './internals/fetch';
 
 // Main functions
 export const apiActionBuilder = (key, url, trackingId, options = {}) => ({

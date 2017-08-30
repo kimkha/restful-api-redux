@@ -54,6 +54,6 @@ export const fetchJson = async (url, options = {}) => {
     });
 };
 
-export const queryParameters = data => Object.keys(data)
+export const queryParameters = data => !data? '' : Object.keys(data)
   .map(key => [ key, data[ key ] ].map(encodeURIComponent).join('='))
   .join('&');
