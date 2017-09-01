@@ -25,7 +25,7 @@ const restReducer = (state, payload, options = {}) => {
     if (Array.isArray(payload)) {
       // Response is an array of items
 
-      const group = options['groups'] || 'ids';
+      const group = options['group'] || 'ids';
       const shouldAppend = options['shouldAppend'] || false;
       const oldList = state.list || {};
 
