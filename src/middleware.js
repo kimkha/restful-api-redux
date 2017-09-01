@@ -11,6 +11,7 @@ const asyncRequest = async (apiAction, dispatch) => {
     key: apiAction.key,
     isLogin: apiAction.isLogin,
     isRest: apiAction.isRest,
+    group: apiAction.group,
     trackingId: apiAction.trackingId,
   });
 
@@ -27,6 +28,8 @@ const asyncRequest = async (apiAction, dispatch) => {
       key: apiAction.key,
       isLogin: apiAction.isLogin,
       isRest: apiAction.isRest,
+      group: apiAction.group,
+      shouldAppend: apiAction.shouldAppend,
       trackingId: apiAction.trackingId,
     });
 
@@ -40,6 +43,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       key: apiAction.key,
       isLogin: apiAction.isLogin,
       isRest: apiAction.isRest,
+      group: apiAction.group,
       trackingId: apiAction.trackingId,
     });
   }

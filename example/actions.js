@@ -5,5 +5,5 @@ export const userApi = () => apiActionBuilder('users', `http://192.168.1.30:3000
 
 export const loginApi = (username, password) => apiLoginBuilder(`http://192.168.1.30:3000/auth/login?username=${username}&password=${password}`, 'ewsesd', {});
 
-export const queryClient = (query) => apiRestBuilder('clients', `http://192.168.1.30:3000/api/clients`, 'ewmjdd', {});
-export const queryCountry = (query) => apiRestBuilder('countries', `http://192.168.1.30:3000/api/geocountries`);
+export const queryClient = (query) => apiRestBuilder('clients', `http://192.168.1.30:3000/api/clients`, null, 'ewmjdd', {});
+export const queryCountry = (query) => apiRestBuilder('countries', `http://192.168.1.30:3000/api/geocountries`, 'list');

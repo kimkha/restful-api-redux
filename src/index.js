@@ -19,12 +19,14 @@ export const apiActionBuilder = (key, url, trackingId, options = {}) => ({
 });
 
 // TODO Call RESTful API
-export const apiRestBuilder = (key, url, trackingId, options = {}) => ({
+export const apiRestBuilder = (key, url, group, shouldAppend, trackingId, options = {}) => ({
   [API_ACTION_TYPE]: {
     key,
     endpoint: url,
     fetchOptions: options,
     isRest: true,
+    group,
+    shouldAppend,
     trackingId,
   },
 });
@@ -55,13 +57,13 @@ export const convertApiState = (state, key) => (state && state[API_REDUX_KEY] &&
 
 export const isLoginState = (state) => (state && state[API_REDUX_KEY] && state[API_REDUX_KEY][API_AUTHEN_KEY]);
 
-export const convertRestListState = (state, key) => {
+export const convertRestListState = (state, key, group = 'ids') => {
   const apiResult = convertApiState(state, key);
   if (apiResult.response) {
     const data = apiResult.response.data;
     const list = apiResult.response.list;
-    if (list && list.ids && list.ids.length > 0) {
-      return list.ids.map(id => data[id]);
+    if (list && list[group] && list[group].length > 0) {
+      return list[group].map(id => data[id]);
     }
   }
   return [];

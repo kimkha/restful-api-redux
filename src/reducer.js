@@ -12,29 +12,32 @@ export const initialRestState = {
   last: {
     item: null,
   },
-  list: {
-    ids: [],
-  }
+  list: {},
 };
 
-const restReducer = (state, payload) => {
+const restReducer = (state, payload, options = {}) => {
   state = state || initialRestState;
-  // TODO Parse reducer
+  // Parse reducer
   if (payload) {
     // Copy data before merge
     const data = Object.assign({}, state.data);
 
     if (Array.isArray(payload)) {
       // Response is an array of items
-      const list = {
-        ids: [],
-      };// FIXME Should append the new list, instead reset list ids
+
+      const group = options['groups'] || 'ids';
+      const shouldAppend = options['shouldAppend'] || false;
+      const oldList = state.list || {};
+
+      const list = Object.assign({}, oldList, {
+        [group]: shouldAppend ? (oldList[group] || []) : [],
+      });
 
       payload.forEach(item => {
         const id = item['id'] || item['_id'];
         if (id) {
           data[id] = item;
-          list.ids.push(id);
+          list[group].push(id);
         }
       });
 
@@ -55,7 +58,7 @@ const restReducer = (state, payload) => {
   return state;
 };
 
-const objectReducer = (state = initialState, { type, key, payload, isRest }) => {
+const objectReducer = (state = initialState, { type, key, payload, isRest, ...options }) => {
   const apiTypes = toTypes(key);
   switch (type) {
     case apiTypes.LOADING:
@@ -64,7 +67,7 @@ const objectReducer = (state = initialState, { type, key, payload, isRest }) => 
       });
     case apiTypes.SUCCESS:
       if (isRest) {
-        payload = restReducer(state.response, payload);
+        payload = restReducer(state.response, payload, options);
       }
       return Object.assign({}, state, {
         error: null,
