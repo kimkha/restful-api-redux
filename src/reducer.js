@@ -86,7 +86,7 @@ const objectReducer = (state = initialState, { type, key, payload, isRest, ...op
 
 export const apiReducer = {
   [API_REDUX_KEY]: (state = {}, action) => {
-    if (isApiType(action.type)) {
+    if (action && isApiType(action.type)) {
       // Only proceed API
       const obj = objectReducer(state[ action.key ], action);
       const result = {
@@ -104,14 +104,14 @@ export const apiReducer = {
     return state;
   },
   [API_REDUX_TRACK_KEY]: (state = {}, action) => {
-    if (isApiType(action.type) && action.trackingId) {
+    if (action && isApiType(action.type) && action.trackingId) {
       // Only proceed API
       const status = revertType(action.type);
       return Object.assign({}, state, {
         [action.trackingId]: status,
       });
     }
-    if (action.type === `${API_REDUX_TRACK_KEY}_RESET` && action.trackingId) {
+    if (action && action.type === `${API_REDUX_TRACK_KEY}_RESET` && action.trackingId) {
       // Reset trackingId
       return Object.assign({}, state, {
         [action.trackingId]: '',
