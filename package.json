@@ -1,6 +1,6 @@
 {
   "name": "restful-api-redux",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "RESTful API Request helper with Redux",
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --hot --inline --config ./webpack.config.js",
@@ -13,12 +13,6 @@
     "src"
   ],
   "devDependencies": {
-    "prop-types": "^15.5.10",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-redux": "^5.0.5",
-    "recompose": "^0.24.0",
-    "redux": "^3.6.0",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -30,6 +24,12 @@
     "babel-preset-stage-1": "^6.24.1",
     "css-loader": "^0.28.4",
     "json-loader": "^0.5.7",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.5",
+    "recompose": "^0.24.0",
+    "redux": "^3.6.0",
     "style-loader": "^0.18.2",
     "webpack": "^3.4.1",
     "webpack-dev-server": "^2.6.1"
