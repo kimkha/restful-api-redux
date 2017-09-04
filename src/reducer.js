@@ -1,4 +1,4 @@
-import { API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY } from './constants';
+import { API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_PROFILE_KEY, API_PROFILE_KEY } from './constants';
 import { toTypes, isApiType, revertType } from './internals/types';
 
 export const initialState = {
@@ -13,6 +13,12 @@ export const initialRestState = {
     item: null,
   },
   list: {},
+};
+
+export const initialUserState = {
+  status: 'UNAUTHENTICATED', // LOGGING_IN, LOGIN_ERR, AUTHENTICATED
+  error: null,
+  profile: null,
 };
 
 const restReducer = (state, payload, options = {}) => {
@@ -86,7 +92,7 @@ const objectReducer = (state = initialState, { type, key, payload, isRest, ...op
 
 export const apiReducer = {
   [API_REDUX_KEY]: (state = {}, action) => {
-    if (action && isApiType(action.type)) {
+    if (isApiType(action.type)) {
       // Only proceed API
       const obj = objectReducer(state[ action.key ], action);
       const result = {
@@ -104,7 +110,7 @@ export const apiReducer = {
     return state;
   },
   [API_REDUX_TRACK_KEY]: (state = {}, action) => {
-    if (action && isApiType(action.type) && action.trackingId) {
+    if (isApiType(action.type) && action.trackingId) {
       // Only proceed API
       const status = revertType(action.type);
       return Object.assign({}, state, {
@@ -119,4 +125,10 @@ export const apiReducer = {
     }
     return state;
   },
+  [API_REDUX_PROFILE_KEY]: (state = {}, action) => {
+    if (action.key === API_PROFILE_KEY) {
+
+    }
+    return state;
+  }
 };
