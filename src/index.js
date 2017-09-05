@@ -1,5 +1,5 @@
 // Export modules
-import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_PROFILE_KEY } from './constants';
+import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_PROFILE_KEY, API_LOGIN_KEY } from './constants';
 import apiMiddleware from './middleware';
 import { apiReducer, initialState } from './reducer';
 
@@ -41,7 +41,7 @@ export const apiProfileBuilder = (url, options = {}) => ({
 
 export const apiLoginBuilder = (url, trackingId, options = {}, tokenConverter = tk => tk) => ({
   [API_ACTION_TYPE]: {
-    key: 'login',
+    key: API_LOGIN_KEY,
     endpoint: url,
     fetchOptions: options,
     isLogin: true,

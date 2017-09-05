@@ -1,4 +1,4 @@
-import { API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_PROFILE_KEY, API_PROFILE_KEY } from './constants';
+import { API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_PROFILE_KEY, API_PROFILE_KEY, API_LOGIN_KEY } from './constants';
 import { toTypes, isApiType, revertType } from './internals/types';
 
 export const initialState = {
@@ -90,6 +90,45 @@ const objectReducer = (state = initialState, { type, key, payload, isRest, ...op
   }
 };
 
+const profileReducer = (state = initialUserState, { type, key, payload }) => {
+  const apiTypes = toTypes(key);
+  switch (type) {
+    case apiTypes.SUCCESS:
+      return Object.assign({}, state, {
+        profile: payload,
+        status: 'AUTHENTICATED',
+      });
+    case apiTypes.FAILURE:
+      return Object.assign({}, state, {
+        error: payload,
+        status: 'UNAUTHENTICATED',
+      });
+    default:
+      return state;
+  }
+};
+
+const loginReducer = (state = initialUserState, { type, key, payload }) => {
+  const apiTypes = toTypes(key);
+  switch (type) {
+    case apiTypes.LOADING:
+      return Object.assign({}, state, {
+        status: 'LOGGING_IN',
+      });
+    case apiTypes.SUCCESS:
+      return Object.assign({}, state, {
+        status: 'AUTHENTICATED',
+      });
+    case apiTypes.FAILURE:
+      return Object.assign({}, state, {
+        error: payload,
+        status: 'LOGIN_ERR',
+      });
+    default:
+      return state;
+  }
+};
+
 export const apiReducer = {
   [API_REDUX_KEY]: (state = {}, action) => {
     if (isApiType(action.type)) {
@@ -127,7 +166,18 @@ export const apiReducer = {
   },
   [API_REDUX_PROFILE_KEY]: (state = {}, action) => {
     if (action.key === API_PROFILE_KEY) {
-
+      const obj = profileReducer(state[ action.key ], action);
+      const result = {
+        [action.key]: obj,
+      };
+      return Object.assign({}, state, result);
+    }
+    if (action.key === API_LOGIN_KEY) {
+      const obj = loginReducer(state[ API_PROFILE_KEY ], action);
+      const result = {
+        [API_PROFILE_KEY]: obj,
+      };
+      return Object.assign({}, state, result);
     }
     return state;
   }

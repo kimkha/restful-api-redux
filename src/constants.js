@@ -6,3 +6,4 @@ export const API_REDUX_PROFILE_KEY = 'api_profile_redux';
 export const API_AUTHEN_KEY = '_authen';
 export const API_STORAGE_KEY = 'api_storage';
 export const API_PROFILE_KEY = 'api_current_profile';
+export const API_LOGIN_KEY = 'api_login';
