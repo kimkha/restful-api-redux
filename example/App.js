@@ -7,9 +7,10 @@ import {
   queryClient as queryClientAction,
   userApi as userApiAction,
   loginApi as loginApiAction,
+  profileApi as profileApiAction,
   queryCountry as queryCountryAction,
 } from './actions';
-import { convertApiState, isLoginState, convertRestListState } from '../src';
+import { convertApiState, convertAuthenState, convertRestListState } from '../src';
 
 class App extends PureComponent {
   componentWillMount() {
@@ -18,6 +19,10 @@ class App extends PureComponent {
 
   handleLogin = () => {
     this.props.loginApi('admin', 'setfil');
+  };
+
+  handleProfile = () => {
+    this.props.profileApi();
   };
 
   handleApi = () => {
@@ -30,13 +35,16 @@ class App extends PureComponent {
   };
 
   render() {
-    const { data, clients, isLogin } = this.props;
+    const { data, clients, authen } = this.props;
+
+    const isLogin = authen && authen.status === 'LOGGED_IN';
 
     return (
       <div>
         {JSON.stringify(data)} <br />
         {JSON.stringify(clients)} <br />
         {!isLogin && <button onClick={this.handleLogin}>Login</button>}
+        <button onClick={this.handleProfile}>Profile</button>
         <button onClick={this.handleApi}>Recall</button>
         <button onClick={this.handleClients}>Fetch clients</button>
       </div>
@@ -51,11 +59,12 @@ App.defaultProps = {};
 function mapStateToProps(state, props) {
   const res = convertApiState(state, 'users');
   const clients = convertRestListState(state, 'clients');
+  const authen = convertAuthenState(state);
   return {
     data: res.response,
     loading: res.isLoading,
     error: res.error,
-    isLogin: isLoginState(state),
+    authen,
     clients,
   };
 }
@@ -68,6 +77,7 @@ const enhance = compose(
       queryClient: queryClientAction,
       userApi: userApiAction,
       loginApi: loginApiAction,
+      profileApi: profileApiAction,
       queryCountry: queryCountryAction,
     },
   )

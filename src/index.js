@@ -1,7 +1,7 @@
 // Export modules
-import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_PROFILE_KEY, API_LOGIN_KEY } from './constants';
+import { API_ACTION_TYPE, API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_AUTHEN_KEY, API_PROFILE_KEY, API_LOGIN_KEY } from './constants';
 import apiMiddleware from './middleware';
-import { apiReducer, initialState } from './reducer';
+import { apiReducer, initialState, initialUserState } from './reducer';
 
 export { API_ACTION_TYPE, API_REDUX_KEY };
 export { apiMiddleware };
@@ -63,7 +63,7 @@ export const apiResetTracking = (trackingId) => ({
  */
 export const convertApiState = (state, key) => (state && state[ API_REDUX_KEY ] && state[ API_REDUX_KEY ][ key ]) || initialState;
 
-export const isLoginState = (state) => (state && state[ API_REDUX_KEY ] && state[ API_REDUX_KEY ][ API_AUTHEN_KEY ]);
+export const convertAuthenState = (state) => (state && state[ API_REDUX_AUTHEN_KEY ]) || initialUserState;
 
 export const convertRestListState = (state, key, group = 'ids') => {
   const apiResult = convertApiState(state, key);
