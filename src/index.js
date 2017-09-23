@@ -53,13 +53,12 @@ export const apiLoginBuilder = (url, trackingId, options = {}, tokenConverter = 
   },
 });
 
-export const apiLogoutBuilder = (url, trackingId, options = {}, tokenConverter = tk => tk) => ({
+export const apiLogoutBuilder = (url, trackingId, options = {}) => ({
   [API_ACTION_TYPE]: {
     key: API_LOGOUT_KEY,
     endpoint: url,
     fetchOptions: options,
     isLogout: true,
-    tokenConverter,
     trackingId,
   },
 });
