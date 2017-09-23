@@ -14,6 +14,17 @@ export const saveToken = async (token) => {
   return 'ok';
 };
 
+export const removeToken = async () => {
+  if (typeof AsyncStorage !== 'undefined') {
+    await AsyncStorage.removeItem(API_STORAGE_KEY);
+  } else if (typeof Storage !== 'undefined') {
+    localStorage.removeItem(API_STORAGE_KEY, JSON.stringify(token));
+  } else {
+    memoryToken = null;
+  }
+  return 'ok';
+};
+
 // TODO Expire token?
 export const getToken = async () => {
   let token = null;

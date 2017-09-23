@@ -1,7 +1,7 @@
 import { API_ACTION_TYPE } from './constants';
 import { fetchJson } from './internals/fetch';
 import { toTypes } from './internals/types';
-import { saveToken } from './internals/token';
+import { removeToken, saveToken } from './internals/token';
 
 const asyncRequest = async (apiAction, dispatch) => {
   const apiTypes = toTypes(apiAction.key);
@@ -10,6 +10,7 @@ const asyncRequest = async (apiAction, dispatch) => {
     type: apiTypes.LOADING,
     key: apiAction.key,
     isLogin: apiAction.isLogin,
+    isLogout: apiAction.isLogout,
     isRest: apiAction.isRest,
     group: apiAction.group,
     trackingId: apiAction.trackingId,
@@ -20,6 +21,8 @@ const asyncRequest = async (apiAction, dispatch) => {
 
     if (apiAction.isLogin) {
       await saveToken(apiAction.tokenConverter(json));
+    } else if (apiAction.isLogout) {
+      await removeToken();
     }
 
     dispatch({
@@ -27,6 +30,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       payload: json,
       key: apiAction.key,
       isLogin: apiAction.isLogin,
+      isLogout: apiAction.isLogout,
       isRest: apiAction.isRest,
       group: apiAction.group,
       shouldAppend: apiAction.shouldAppend,
@@ -42,6 +46,7 @@ const asyncRequest = async (apiAction, dispatch) => {
       payload: error,
       key: apiAction.key,
       isLogin: apiAction.isLogin,
+      isLogout: apiAction.isLogout,
       isRest: apiAction.isRest,
       group: apiAction.group,
       trackingId: apiAction.trackingId,

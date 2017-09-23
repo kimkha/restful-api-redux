@@ -1,4 +1,7 @@
-import { API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_AUTHEN_KEY, API_PROFILE_KEY, API_LOGIN_KEY } from './constants';
+import {
+  API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_AUTHEN_KEY, API_PROFILE_KEY, API_LOGIN_KEY,
+  API_LOGOUT_KEY
+} from './constants';
 import { toTypes, isApiType, revertType } from './internals/types';
 
 export const initialState = {
@@ -169,6 +172,8 @@ export const apiReducer = {
       return profileReducer(state, action);
     } else if (action.key === API_LOGIN_KEY) {
       return loginReducer(state, action);
+    } else if (action.key === API_LOGOUT_KEY) {
+      return Object.assign({}, initialUserState);
     }
     return state;
   }
