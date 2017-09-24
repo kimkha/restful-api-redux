@@ -138,12 +138,15 @@ const loginReducer = (state = initialUserState, { type, key, payload }) => {
   }
 };
 
-const eventSourceReducer = (state = initialEventSourceState, { type, key, payload, receiveAt }) => {
+const eventSourceReducer = (state = initialEventSourceState, { type, key, payload, onlyLast, receiveAt }) => {
   const apiTypes = toTypes(key);
-  switch (apiTypes) {
+  switch (type) {
     case apiTypes.EVENTMSG:
-      const data = Object.assign([], state.data);
-      data.push(payload);
+      let data = [];
+      if (!onlyLast) {
+        data = Object.assign([], state.data);
+        data.push(payload);
+      }
 
       return {
         error: null,

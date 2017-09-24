@@ -1,6 +1,6 @@
 import { API_ACTION_TYPE } from './constants';
 import { fetchJson } from './internals/fetch';
-import { eventSource, closeEventSource } from './internals/eventsource';
+import { createEventSource, closeEventSource } from './internals/eventsource';
 import { toTypes } from './internals/types';
 import { removeToken, saveToken } from './internals/token';
 
@@ -63,12 +63,13 @@ const asyncEventSource = async (apiAction, dispatch) => {
       // Existing, stop it and re-init
       closeEventSource(allEventSources[apiAction.key]);
     }
-    allEventSources[apiAction.key] = await eventSource(apiAction.endpoint, apiAction.fetchOptions, (data) => {
+    allEventSources[apiAction.key] = await createEventSource(apiAction.endpoint, apiAction.fetchOptions, (data) => {
       dispatch({
         type: apiTypes.EVENTMSG,
         payload: data,
         key: apiAction.key,
         isEventSource: apiAction.isEventSource,
+        onlyLast: apiAction.onlyLast,
         receiveAt: +new Date(),
       }, () => {
         dispatch({
@@ -76,6 +77,7 @@ const asyncEventSource = async (apiAction, dispatch) => {
           payload: 'EventSource error',
           key: apiAction.key,
           isEventSource: apiAction.isEventSource,
+          onlyLast: apiAction.onlyLast,
         });
       });
     });

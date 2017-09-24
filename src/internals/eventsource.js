@@ -1,7 +1,7 @@
 import { getToken } from './token';
 
 // TODO Add token
-export const eventSource = async (url, options, onMessage, onError) => {
+export const createEventSource = async (url, options, onMessage, onError) => {
   let token = await getToken();
   if (token && token.id) {
     if (url.indexOf('?') >= 0) {
@@ -12,11 +12,10 @@ export const eventSource = async (url, options, onMessage, onError) => {
   }
 
   const src = new EventSource(url);
-  src.onmessage = (msg) => {
-    console.log(msg.data);
+  src.addEventListener('data', (msg) => {
     const data = JSON.parse(msg.data);
     onMessage && onMessage(data);
-  };
+  });
   src.onerror = () => {
     onError && onError();
   };

@@ -68,12 +68,13 @@ export const apiResetTracking = (trackingId) => ({
   trackingId,
 });
 
-export const eventSourceBuilder = (key, url, options = {}) => ({
+export const eventSourceBuilder = (key, url, onlyLast = true, options = {}) => ({
   [API_ACTION_TYPE]: {
     key,
     endpoint: url,
     fetchOptions: options,
     isEventSource: true,
+    onlyLast,
   },
 });
 
