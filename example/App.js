@@ -18,7 +18,7 @@ class App extends PureComponent {
   }
 
   handleLogin = () => {
-    this.props.loginApi('admin', 'setfil');
+    this.props.loginApi('admin', 'Abc123!');
   };
 
   handleProfile = () => {

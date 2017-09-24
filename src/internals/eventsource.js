@@ -13,6 +13,7 @@ export const eventSource = async (url, options, onMessage, onError) => {
 
   const src = new EventSource(url);
   src.onmessage = (msg) => {
+    console.log(msg.data);
     const data = JSON.parse(msg.data);
     onMessage && onMessage(data);
   };
