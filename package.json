@@ -1,6 +1,6 @@
 {
   "name": "restful-api-redux",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "RESTful API Request helper with Redux",
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --hot --inline --config ./webpack.config.js",

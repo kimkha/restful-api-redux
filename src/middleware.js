@@ -1,5 +1,6 @@
 import { API_ACTION_TYPE } from './constants';
 import { fetchJson } from './internals/fetch';
+import { eventSource, closeEventSource } from './internals/eventsource';
 import { toTypes } from './internals/types';
 import { removeToken, saveToken } from './internals/token';
 
@@ -54,12 +55,58 @@ const asyncRequest = async (apiAction, dispatch) => {
   }
 };
 
+const allEventSources = {};
+const asyncEventSource = async (apiAction, dispatch) => {
+  const apiTypes = toTypes(apiAction.key);
+  try {
+    if (allEventSources[apiAction.key]) {
+      // Existing, stop it and re-init
+      closeEventSource(allEventSources[apiAction.key]);
+    }
+    allEventSources[apiAction.key] = await eventSource(apiAction.endpoint, apiAction.fetchOptions, (data) => {
+      dispatch({
+        type: apiTypes.EVENTMSG,
+        payload: data,
+        key: apiAction.key,
+        isEventSource: apiAction.isEventSource,
+        receiveAt: +new Date(),
+      }, () => {
+        dispatch({
+          type: apiTypes.FAILURE,
+          payload: 'EventSource error',
+          key: apiAction.key,
+          isEventSource: apiAction.isEventSource,
+        });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+
+    dispatch({
+      type: apiTypes.FAILURE,
+      payload: error,
+      key: apiAction.key,
+      isEventSource: apiAction.isEventSource,
+    });
+  }
+};
+
+export const stopEventSource = (key) => {
+  if (allEventSources[key]) {
+    closeEventSource(allEventSources[key]);
+  }
+};
+
 export default ({ dispatch }) => next => action => {
   const apiAction = action[ API_ACTION_TYPE ];
 
   // Ignore non-API actions.
   if (typeof apiAction !== 'object') {
     return next(action);
+  }
+
+  if (apiAction.isEventSource) {
+    return asyncEventSource(apiAction, dispatch);
   }
 
   return asyncRequest(apiAction, dispatch);

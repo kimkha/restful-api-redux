@@ -1,6 +1,6 @@
 import {
   API_REDUX_KEY, API_AUTHEN_KEY, API_REDUX_TRACK_KEY, API_REDUX_AUTHEN_KEY, API_PROFILE_KEY, API_LOGIN_KEY,
-  API_LOGOUT_KEY
+  API_LOGOUT_KEY, API_REDUX_EVENT_KEY
 } from './constants';
 import { toTypes, isApiType, revertType } from './internals/types';
 
@@ -22,6 +22,12 @@ export const initialUserState = {
   status: 'UNAUTHENTICATED', // LOGGING_IN, LOGIN_ERR, LOGGED_IN, AUTHENTICATED
   error: null,
   profile: null,
+};
+
+export const initialEventSourceState = {
+  error: null,
+  data: [],
+  last: null,
 };
 
 const restReducer = (state, payload, options = {}) => {
@@ -132,9 +138,31 @@ const loginReducer = (state = initialUserState, { type, key, payload }) => {
   }
 };
 
+const eventSourceReducer = (state = initialEventSourceState, { type, key, payload, receiveAt }) => {
+  const apiTypes = toTypes(key);
+  switch (apiTypes) {
+    case apiTypes.EVENTMSG:
+      const data = Object.assign([], state.data);
+      data.push(payload);
+
+      return {
+        error: null,
+        data,
+        last: payload,
+        receiveAt,
+      };
+    case apiTypes.FAILURE:
+      return Object.assign({}, state, {
+        error: payload,
+      });
+    default:
+      return state;
+  }
+};
+
 export const apiReducer = {
   [API_REDUX_KEY]: (state = {}, action) => {
-    if (isApiType(action.type)) {
+    if (isApiType(action.type) && !action.isEventSource) {
       // Only proceed API
       const obj = objectReducer(state[ action.key ], action);
       const result = {
@@ -152,7 +180,7 @@ export const apiReducer = {
     return state;
   },
   [API_REDUX_TRACK_KEY]: (state = {}, action) => {
-    if (isApiType(action.type) && action.trackingId) {
+    if (isApiType(action.type) && !action.isEventSource && action.trackingId) {
       // Only proceed API
       const status = revertType(action.type);
       return Object.assign({}, state, {
@@ -164,6 +192,16 @@ export const apiReducer = {
       return Object.assign({}, state, {
         [action.trackingId]: '',
       });
+    }
+    return state;
+  },
+  [API_REDUX_EVENT_KEY]: (state = {}, action) => {
+    if (action.isEventSource) {
+      const obj = eventSourceReducer(state[ action.key ], action);
+      const result = {
+        [action.key]: obj,
+      };
+      return Object.assign({}, state, result);
     }
     return state;
   },

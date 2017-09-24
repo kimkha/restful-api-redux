@@ -1,6 +1,6 @@
 import { API_ACTION_TYPE, API_PROFILE_KEY, API_LOGIN_KEY } from '../constants';
 
-const baseTypes = [ 'LOADING', 'SUCCESS', 'FAILURE' ];
+const baseTypes = [ 'LOADING', 'SUCCESS', 'FAILURE', 'EVENTMSG' ];
 const specialTypes = [ API_PROFILE_KEY, API_LOGIN_KEY ].map(k => `${API_ACTION_TYPE}/${k.toUpperCase()}`);
 
 export const toTypes = (key) =>
